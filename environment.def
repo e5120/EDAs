@@ -1,0 +1,26 @@
+Bootstrap: docker
+From: continuumio/anaconda3:latest
+
+%setup
+
+%environment
+  export LC_ALL=C
+  export PATH=/opt/conda/bin:$PATH
+
+%post
+  export PATH=/opt/conda/bin:$PATH
+
+  apt-get update && apt-get upgrade -y
+  apt-get install -y build-essential
+
+  conda update conda
+  conda update cython
+
+  pip install --upgrade pip
+
+%labels
+  Author shimadu
+  Version v0.1.0
+
+%help
+  This is a container that is prepared conda environment on Linux
