@@ -27,7 +27,7 @@ class SimpleGA(EDABase):
             self.eval_count += c_one.shape[0]
         else:
             self.fitness[self.next_gen_idxes] = fxc[: len(self.next_gen_idxes)]
-            self.eval_count += self.next_gen_idxes.shape[0]
+            self.eval_count += len(self.next_gen_idxes)
         # store best individual and evaluation value
         idx = np.argsort(self.fitness)
         if self.best_eval > self.fitness[idx[0]]:
@@ -35,7 +35,7 @@ class SimpleGA(EDABase):
             self.best_indiv = self.population[idx[0]]
         # selection
         if self.selection is not None:
-            self.population, self.fitness = self.selection.apply(self.population, self.fitness, sort=False)
+            self.population, self.fitness = self.selection(self.population, self.fitness, sort=False)
         # crossover
         if self.crossover is not None:
             p = self.fitness / np.sum(self.fitness)
@@ -45,10 +45,10 @@ class SimpleGA(EDABase):
             for i in range(0, len(parents_idx), 2):
                 idx1 = parents_idx[i]
                 idx2 = parents_idx[i+1]
-                child1, child2 = self.crossover.apply(self.population[idx1],
-                                                      self.population[idx2],
-                                                      self.fitness[idx1],
-                                                      self.fitness[idx2])
+                child1, child2 = self.crossover(self.population[idx1],
+                                                self.population[idx2],
+                                                self.fitness[idx1],
+                                                self.fitness[idx2])
                 self.population[idx1] = child1
                 self.population[idx2] = child2
             self.next_gen_idxes = parents_idx
