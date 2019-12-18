@@ -18,7 +18,8 @@ class EDABase(object):
             self.theta = theta_init
 
         self.lam = lam
-        self.best_eval = 2**32
+        # for record
+        self.best_eval = np.inf
         self.best_indiv = None
         self.eval_count = 0
 
