@@ -1,0 +1,4 @@
+root_dir=/path/to/dev
+
+src_dir=${root_dir}/eda
+script_dir=${root_dir}/scripts
