@@ -25,7 +25,7 @@ def optimizer_opts(parser):
     parser.add_argument("--theta-mut-prob", type=float, default=0.02)
     parser.add_argument("--theta-mut-shift", type=float, default=0.05)
     parser.add_argument("--replacement", type=str, default="restricted",
-                        choices=["restricted", "worst"])
+                        choices=["restricted", "trunc"])
     parser.add_argument("--window-size", type=int, default=2)
     parser.add_argument("--train-steps", type=int, default=1e5)
 

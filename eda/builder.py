@@ -4,7 +4,7 @@ from objective.util import Item
 from optimizer import UMDA, PBIL, MIMIC, ECGA, AffEDA, SimpleGA, CGA
 from optimizer.selection import Block, Tournament, Roulette, Top
 from optimizer.crossover import Uniform
-from optimizer.replacement import RestrictedReplacement, WorstReplacement
+from optimizer.replacement import RestrictedReplacement, TruncatedReplacement
 
 
 def build_logger(args):
@@ -84,7 +84,8 @@ def build_optimizer(args, objective):
         selection = build_selection(args)
         crossover = build_crossover(args)
         mutation = build_mutation(args)
-        return SimpleGA(categories,
+        replacement = build_replacement(args, len(categories))
+        return SimpleGA(categories, replacement,
                         lam=args.lam,
                         selection=selection,
                         crossover=crossover,
@@ -129,7 +130,7 @@ def build_mutation(args):
 def build_replacement(args, dim):
     if args.replacement == "restricted":
         return RestrictedReplacement(args.window_size, dim)
-    elif args.replacement == "worst":
-        return WorstReplacement()
+    elif args.replacement == "trunc":
+        return TruncatedReplacement()
     else:
         return NotImplementedError
