@@ -3,7 +3,7 @@ from objective import Knapsack, OneMax, FourPeaks, DeceptiveOrder3, DeceptiveOrd
 from objective.util import Item
 from optimizer import UMDA, PBIL, MIMIC, ECGA, AffEDA, SimpleGA, CGA
 from optimizer.selection import Block, Tournament, Roulette, Top
-from optimizer.crossover import Uniform
+from optimizer.crossover import Uniform, TwoPoint
 from optimizer.replacement import RestrictedReplacement, TruncatedReplacement
 
 
@@ -114,6 +114,8 @@ def build_selection(args):
 def build_crossover(args):
     if args.crossover == "uniform":
         return Uniform()
+    elif args.crossover == "two_point":
+        return TwoPoint()
     elif args.crossover == "none":
         return None
     else:

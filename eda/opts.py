@@ -18,7 +18,7 @@ def optimizer_opts(parser):
                         choices=["none", "block", "tournament", "roulette", "top"])
     parser.add_argument("--selection-rate", type=float, default=0.5)
     parser.add_argument("--crossover", type=str, default="uniform",
-                        choices=["none", "uniform"])
+                        choices=["none", "uniform", "two_point"])
     parser.add_argument("--theta-cross-prob", type=float, default=0.8)
     parser.add_argument("--mutation", type=str, default="none",
                         choices=["none"])
