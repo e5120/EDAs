@@ -1,5 +1,5 @@
 # EDAs
-Implementation of Estimation of Distribution Algorithm (EDA)
+Implementation of Estimation of Distribution Algorithms (EDAs)
 
 ## 推奨値
 |                                                       手法                                                       |                                          推奨パラメータ                                           |
