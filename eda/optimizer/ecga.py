@@ -6,14 +6,14 @@ from optimizer.util import SubSet, Cache
 
 class ECGA(EDABase):
     def __init__(self, categories, replacement,
-                 selection=None, lam=16, theta_init=None):
+                 selection=None, lam=500, theta_init=None):
         super(ECGA, self).__init__(categories, lam=lam, theta_init=theta_init)
-        self.cur_pop = None
-        self.cur_fit = None
-        self.selection = selection
         self.replacement = replacement
+        self.selection = selection
+
+        self.population = None
+        self.fitness = None
         self.cluster = None
-        self.cache = Cache(self.d)
 
     def update(self, c_one, fxc, range_restriction=False):
         self.eval_count += c_one.shape[0]
@@ -24,46 +24,48 @@ class ECGA(EDABase):
             self.best_indiv = c_one[best_idx]
         if self.selection is not None:
             c_one, fxc = self.selection(c_one, fxc)
+        # transform one-hot vector to index
         c_one = np.argmax(c_one, axis=2)
-        if self.cur_pop is None:
-            self.cur_pop = c_one
-            self.cur_fit = fxc
+        if self.population is None:
+            self.population = c_one
+            self.fitness = fxc
         else:
-            self.cur_pop, self.cur_fit = self.replacement(self.cur_pop,
-                                                          self.cur_fit,
-                                                          c_one,
-                                                          fxc)
-        self.cluster = self.greedy_mpm_search(self.cur_pop)
+            self.population, self.fitness = self.replacement(self.population,
+                                                             self.fitness,
+                                                             c_one,
+                                                             fxc)
+        self.cluster = self.greedy_mpm_search(self.population)
 
     def greedy_mpm_search(self, population):
         # initialize subset of cluster
         cluster = [SubSet(i, population[:, i], self.Cmax) for i in range(self.d)]
         # initialize cache
-        self.initialize_mpm(cluster)
+        cache = self.initialize_mpm(cluster)
         # clustering according to CCO
         while True:
-            best_pos_i, best_pos_j = self.cache.argmax_cc()
-            if self.cache.cc_list[best_pos_i, best_pos_j] <= 0:
+            pos_i, pos_j = cache.argmax_cc()
+            if cache.cc_list[pos_i, pos_j] <= 0:
                 break
-            cluster[best_pos_i] = self.cache.subsets[best_pos_i, best_pos_j]
-            cluster.pop(best_pos_j)
-            self.cache.remove(best_pos_j)
+            cluster[pos_i] = cache.subsets[pos_i, pos_j]
+            cluster.pop(pos_j)
+            cache.remove(pos_j)
             for k in range(len(cluster)):
-                if k == best_pos_i:
+                if k == pos_i:
                     continue
-                i, k = (k, best_pos_i) if k < best_pos_i else (best_pos_i, k)
-                merge = cluster[i].merge(cluster[k], self.Cmax)
-                self.cache.add(i, k, cluster[i].cc + cluster[k].cc - merge.cc, merge)
+                i, k = (k, pos_i) if k < pos_i else (pos_i, k)
+                merge = cluster[i].merge(cluster[k])
+                cache.add(i, k, cluster[i].cc + cluster[k].cc - merge.cc, merge)
         return cluster
 
     def initialize_mpm(self, cluster):
-        self.cache.init()
+        cache = Cache(self.d)
         for i in range(len(cluster)-1):
             for j in range(i+1, len(cluster)):
                 subset1 = cluster[i]
                 subset2 = cluster[j]
-                merge = subset1.merge(subset2, self.Cmax)
-                self.cache.add(i, j, subset1.cc + subset2.cc - merge.cc, merge)
+                merge = subset1.merge(subset2)
+                cache.add(i, j, subset1.cc + subset2.cc - merge.cc, merge)
+        return cache
 
     def sampling(self):
         # random sampling, only first generation

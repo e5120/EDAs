@@ -7,30 +7,31 @@ from scipy import stats
 class SubSet(object):
     def __init__(self, idx, indiv, c_max):
         self.idx_set = [idx]
-        self.n = indiv.shape[0]
+        self.lam = indiv.shape[0]
         self.indiv = [indiv]
-        self.theta = np.array([np.sum(indiv == i) for i in range(c_max)]) / self.n
-        self.entropy = stats.entropy(self.theta.flatten(), base=c_max)
-        self.mc = np.log(self.n) / np.log(c_max) * np.power(2, len(self))
-        self.cpc = self.n * self.entropy
-        self.cc = self.mc + self.cpc
+        self.c_max = c_max
+        self.theta = np.array([np.sum(indiv == i) for i in range(self.c_max)]) / self.lam
+        self.set_cc()
 
-    def merge(self, other, c_max):
-        assert self.n == other.n
-        merge_tmp = copy.deepcopy(self)
-        merge_tmp.idx_set += other.idx_set
-        merge_tmp.indiv += other.indiv
-        merge_tmp.theta = np.zeros([c_max for _ in range(len(merge_tmp))])
-        freqes = np.stack(merge_tmp.indiv, axis=1)
+    def merge(self, other):
+        assert self.lam == other.lam
+        merged = copy.deepcopy(self)
+        merged.idx_set += other.idx_set
+        merged.indiv += other.indiv
+        merged.theta = np.zeros([self.c_max for _ in range(len(merged))])
+        freqes = np.stack(merged.indiv, axis=1)
         pattern, count = np.unique(freqes, axis=0, return_counts=True)
         for p, c in zip(pattern, count):
-            merge_tmp.theta[tuple(p)] = c
-        merge_tmp.theta /= merge_tmp.n
-        merge_tmp.entropy = stats.entropy(merge_tmp.theta.flatten(), base=c_max)
-        merge_tmp.mc = np.log(merge_tmp.n) / np.log(c_max) * np.power(2, len(merge_tmp))
-        merge_tmp.cpc = merge_tmp.n * merge_tmp.entropy
-        merge_tmp.cc = merge_tmp.mc + merge_tmp.cpc
-        return merge_tmp
+            merged.theta[tuple(p)] = c
+        merged.theta /= merged.lam
+        merged.set_cc()
+        return merged
+
+    def set_cc(self):
+        self.entropy = stats.entropy(self.theta.flatten(), base=self.c_max)
+        self.mc = np.log(self.lam) / np.log(self.c_max) * np.power(2, len(self))
+        self.cpc = self.lam * self.entropy
+        self.cc = self.mc + self.cpc
 
     def __len__(self):
         return len(self.idx_set)

@@ -10,13 +10,13 @@ class AffEDA(EDABase):
     def __init__(self, categories, replacement,
                  selection=None, lam=16, theta_init=None):
         super(AffEDA, self).__init__(categories, lam=lam, theta_init=theta_init)
-        assert self.Cmax == 2
-        self.cur_pop = None
-        self.cur_fit = None
-        self.selection = selection
         self.replacement = replacement
-        self.ap = cluster.AffinityPropagation(affinity="precomputed")
+        self.selection = selection
+
+        self.population = None
+        self.fitness = None
         self.cluster = None
+        self.ap = cluster.AffinityPropagation(affinity="precomputed")
 
     def update(self, c_one, fxc, range_restriction=False):
         self.eval_count += c_one.shape[0]
@@ -27,27 +27,23 @@ class AffEDA(EDABase):
             self.best_indiv = c_one[best_idx]
         if self.selection is not None:
             c_one, fxc = self.selection(c_one, fxc)
+        # transform one-hot vector to index
         c_one = np.argmax(c_one, axis=2)
-        if self.cur_pop is None:
-            self.cur_pop = c_one
-            self.cur_fit = fxc
+        if self.population is None:
+            self.population = c_one
+            self.fitness = fxc
         else:
-            self.cur_pop, self.cur_fit = self.replacement(self.cur_pop,
-                                                          self.cur_fit,
-                                                          c_one,
-                                                          fxc)
-        mi = self.calc_mutual_information(self.cur_pop)
+            self.population, self.fitness = self.replacement(self.population,
+                                                             self.fitness,
+                                                             c_one,
+                                                             fxc)
+        mi = self.calc_mutual_information(self.population)
         cluster_label = self.ap.fit(mi).labels_
-        # print(cluster_label)
-        # print(self.ap.n_iter_)
         cluster_num = np.max(cluster_label) + 1
         cluster = [None for _ in range(cluster_num)]
         for i, label in enumerate(cluster_label):
-            subset = SubSet(i, self.cur_pop[:, i], self.Cmax)
-            if cluster[label] is None:
-                cluster[label] = subset
-            else:
-                cluster[label] = cluster[label].merge(subset, self.Cmax)
+            subset = SubSet(i, self.population[:, i], self.Cmax)
+            cluster[label] = subset if cluster[label] is None else cluster[label].merge(subset)
         self.cluster = cluster
 
     def calc_mutual_information(self, population):
