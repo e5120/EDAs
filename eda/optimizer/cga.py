@@ -16,7 +16,7 @@ class CGA(EDABase):
         if self.best_eval > fxc[idx[0]]:
             self.best_eval = fxc[idx[0]]
             self.best_indiv = c_one[idx[0]]
-        # get winner and loser
+        # get winner and loser, and transform one-hot vector to index
         win = np.argmax(c_one[idx[0]], axis=1)
         lose = np.argmax(c_one[idx[-1]], axis=1)
         # get index for updating parameter that is difference between winner and loser
