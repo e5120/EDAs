@@ -14,8 +14,8 @@ class Logger(object):
         if dir_name is not None:
             dir_name = "{}/{}_{}_{}".format(dir_name,
                                             datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S"),
-                                            args.theta_optim_type,
-                                            args.theta_lam)
+                                            args.optim_type,
+                                            args.lam)
             if not os.path.exists(dir_name):
                 os.makedirs(dir_name)
         self.dir_name = dir_name
