@@ -19,12 +19,11 @@ def optimizer_opts(parser):
     parser.add_argument("--selection-rate", type=float, default=0.5)
     parser.add_argument("--crossover", type=str, default="uniform",
                         choices=["none", "uniform", "two_point"])
-    parser.add_argument("--theta-cross-prob", type=float, default=0.8)
+    parser.add_argument("--crossover-prob", type=float, default=0.8)
     parser.add_argument("--mutation", type=str, default="none",
                         choices=["mutation", "none"])
     parser.add_argument("--mutation-prob", type=float, default=0.01)
-    parser.add_argument("--theta-mut-prob", type=float, default=0.02)
-    parser.add_argument("--theta-mut-shift", type=float, default=0.05)
+    parser.add_argument("--mutation-shift", type=float, default=0.05)
     parser.add_argument("--replacement", type=str, default="restricted",
                         choices=["restricted", "trunc"])
     parser.add_argument("--window-size", type=int, default=2)

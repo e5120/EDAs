@@ -59,8 +59,8 @@ def build_optimizer(args, objective):
         return PBIL(categories, args.lr,
                     lam=args.lam,
                     negative_lr=args.negative_lr,
-                    mut_prob=args.theta_mut_prob,
-                    mut_shift=args.theta_mut_shift)
+                    mut_prob=args.mutation_prob,
+                    mut_shift=args.mutation_shift)
     elif args.optim_type == "mimic":
         replacement = build_replacement(args, len(categories))
         return MIMIC(categories, replacement,
@@ -91,7 +91,7 @@ def build_optimizer(args, objective):
                         selection=selection,
                         crossover=crossover,
                         mutation=mutation,
-                        crossover_prob=args.theta_cross_prob)
+                        crossover_prob=args.crossover_prob)
     else:
         return NotImplementedError
 
