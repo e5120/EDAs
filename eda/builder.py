@@ -91,8 +91,7 @@ def build_optimizer(args, objective):
                         selection=selection,
                         crossover=crossover,
                         mutation=mutation,
-                        crossover_prob=args.theta_cross_prob,
-                        mutation_prob=args.theta_mut_prob)
+                        crossover_prob=args.theta_cross_prob)
     else:
         return NotImplementedError
 
