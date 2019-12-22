@@ -9,7 +9,7 @@ python ${src_dir}/main.py \
         --lam 100 \
         --lr 0.1 \
         --negative-lr 0.075 \
-        --mutation-prob 0.002 \
+        --mutation-prob 0.02 \
         --mutation-shift 0.05 \
         --train-steps 2000 \
         --trials 10 \
