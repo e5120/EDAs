@@ -8,6 +8,7 @@ class Mutation(MutationBase):
         self.prob = prob
 
     def apply(self, population):
+        # ToDo: バイナリ空間から整数空間に拡張
         assert population.shape[2] == 2
         mut_idx = np.random.rand(population.shape[0], population.shape[1]) <= self.prob
         population[mut_idx] = np.logical_not(population[mut_idx]).astype(np.int32)
@@ -16,4 +17,4 @@ class Mutation(MutationBase):
     def __str__(self):
         return 'Mutation(\n' \
                 '    mutation prob: {}\n' \
-                ')\n'.format(self.prob)
+                ')'.format(self.prob)
