@@ -4,6 +4,7 @@ from objective.util import Item
 from optimizer import UMDA, PBIL, MIMIC, ECGA, AffEDA, SimpleGA, CGA
 from optimizer.selection import Block, Tournament, Roulette, Top
 from optimizer.crossover import Uniform, TwoPoint
+from optimizer.mutation import Mutation
 from optimizer.replacement import RestrictedReplacement, TruncatedReplacement
 
 
@@ -123,7 +124,9 @@ def build_crossover(args):
 
 
 def build_mutation(args):
-    if args.mutation == "none":
+    if args.mutation == "mutation":
+        return Mutation(args.mutation_prob)
+    elif args.mutation == "none":
         return None
     else:
         return NotImplementedError

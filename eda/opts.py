@@ -21,7 +21,8 @@ def optimizer_opts(parser):
                         choices=["none", "uniform", "two_point"])
     parser.add_argument("--theta-cross-prob", type=float, default=0.8)
     parser.add_argument("--mutation", type=str, default="none",
-                        choices=["none"])
+                        choices=["mutation", "none"])
+    parser.add_argument("--mutation-prob", type=float, default=0.01)
     parser.add_argument("--theta-mut-prob", type=float, default=0.02)
     parser.add_argument("--theta-mut-shift", type=float, default=0.05)
     parser.add_argument("--replacement", type=str, default="restricted",
