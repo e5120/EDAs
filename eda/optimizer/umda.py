@@ -14,7 +14,7 @@ class UMDA(EDABase):
 
     def update(self, c_one, fxc, range_restriction=False):
         self.eval_count += c_one.shape[0]
-        # sort by fitness and get the index of the top of "selection_rate"%
+        # sort by fitness
         idx = np.argsort(fxc)
         # store best individual and evaluation value
         if self.best_eval > fxc[idx[0]]:
@@ -22,7 +22,7 @@ class UMDA(EDABase):
             self.best_indiv = c_one[idx[0]]
         # apply selection
         if self.selection is not None:
-            c_one, fxc = self.selection.apply(c_one, fxc)
+            c_one, fxc = self.selection(c_one, fxc)
         # update probability vector
         self.theta[:, -1] += self.lr * (np.mean(c_one[:, :, -1], axis=0) - self.theta[:, -1])
         self.theta[:, 0] = 1 - self.theta[:, -1]
