@@ -100,7 +100,7 @@ def build_selection(args):
     if args.selection == "block":
         return Block(sampling_rate=args.sampling_rate)
     elif args.selection == "tournament":
-        return Tournament(sampling_rate=args.sampling_rate)
+        return Tournament(k=args.tournament_size, sampling_rate=args.sampling_rate, replace=args.with_replacement)
     elif args.selection == "roulette":
         return Roulette(selection_rate=args.selection_rate)
     elif args.selection == "top":

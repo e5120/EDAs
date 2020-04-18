@@ -13,10 +13,12 @@ def optimizer_opts(parser):
     parser.add_argument("--lr", type=float, default=0.1)
     parser.add_argument("--negative-lr", type=float, default=None)
     parser.add_argument("--replace-rate", type=float, default=0.1)
-    parser.add_argument("--sampling-rate", type=float, default=0.5)
     parser.add_argument("--selection", type=str, default="tournament",
                         choices=["none", "block", "tournament", "roulette", "top"])
     parser.add_argument("--selection-rate", type=float, default=0.5)
+    parser.add_argument("--sampling-rate", type=float, default=0.5)
+    parser.add_argument("--tournament-size", type=int, default=2)
+    parser.add_argument("--with-replacement", action="store_true")
     parser.add_argument("--crossover", type=str, default="uniform",
                         choices=["none", "uniform", "two_point"])
     parser.add_argument("--crossover-prob", type=float, default=0.8)

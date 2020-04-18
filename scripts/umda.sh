@@ -9,7 +9,8 @@ python ${src_dir}/main.py \
         --lam 100 \
         --lr 0.1 \
         --selection tournament \
-        --sampling-rate 0.3 \
+        --tournament-size 2 \
+        --sampling-rate 1.0 \
         --selection-rate 0.005 \
         --train-steps 1000 \
         --trials 3 \

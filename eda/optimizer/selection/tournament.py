@@ -4,18 +4,22 @@ from optimizer.selection.selection_base import SelectionBase
 
 
 class Tournament(SelectionBase):
-    def __init__(self, sampling_rate=0.5):
-        assert 0 < sampling_rate <= 1.0
+    def __init__(self, k=2, sampling_rate=1.0, replace=True):
+        self.k = k
         self.sampling_rate = sampling_rate
+        self.replace = replace
 
     def apply(self, population, fitness, sort=False):
+        assert self.k <= population.shape[0]
         lam = population.shape[0]
-        sample_lam = int(np.ceil(self.sampling_rate * lam))
-        target_idx = np.arange(lam)
+        target_idx = np.arange(int(self.sampling_rate * lam))
         # get population for Tournament
-        sample_idx = np.array(
-            [np.random.choice(target_idx, sample_lam, replace=False) for _ in range(lam)]
-        )
+        if self.replace:
+            sample_idx = np.array(
+                [np.random.choice(target_idx, self.k, replace=False) for _ in range(lam)]
+            )
+        else:
+            sample_idx = np.random.choice(target_idx, (int(population.shape[0] / self.k), self.k), replace=False)
         # get winner index of each tournament
         winner_idx = np.argmin(fitness[sample_idx], axis=1)
         winner_idx = [sample_idx[i, winner_idx[i]] for i in range(len(winner_idx))]
@@ -28,5 +32,7 @@ class Tournament(SelectionBase):
 
     def __str__(self):
         return 'Tournament Selection(\n' \
-               '    sampling rate: {}' \
-               '\n)'.format(self.sampling_rate)
+               '    tournament size: {}\n' \
+               '    sampling rate: {}\n' \
+               '    with replacement: {}' \
+               '\n)'.format(self.k, self.sampling_rate, self.replace)
