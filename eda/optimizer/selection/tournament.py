@@ -31,7 +31,6 @@ class Tournament(SelectionBase):
         fitness = fitness[winner_idx]
         # if True, sort by fitness
         population, fitness = self.sort_by_fitness(population, fitness, sort=sort)
-        print(population.shape)
         return population, fitness
 
     def __str__(self):
