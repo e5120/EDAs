@@ -6,7 +6,7 @@ from optimizer.eda_base import EDABase
 class SimpleGA(EDABase):
     def __init__(self, categories, replacement, lam=16, theta_init=None,
                  selection=None, crossover=None, mutation=None,
-                 crossover_prob=0.7, elite=True):
+                 crossover_prob=0.7, elite=False):
         super(SimpleGA, self).__init__(categories, lam=lam, theta_init=theta_init)
         self.selection = selection
         self.crossover = crossover
@@ -18,14 +18,13 @@ class SimpleGA(EDABase):
         self.counter = 0
         self.population = None
         self.fitness = None
-        self.sampling_population = None
 
     def update(self, c_one, fxc, range_restriction=False):
         self.counter = 0
         if self.population is None:
             self.eval_count += c_one.shape[0]
         else:
-            self.eval_count += int(self.crossover_prob * self.lam)
+            self.eval_count += int(self.crossover_prob * c_one.shape[0])
 
         if self.elite and self.population is not None:
             self.eval_count -= 1
@@ -46,10 +45,9 @@ class SimpleGA(EDABase):
             self.population, self.fitness = self.selection(self.population,
                                                            self.fitness)
         # crossover
-        population = []
         if self.crossover is not None:
             p = self.fitness / np.sum(self.fitness)
-            lam = int(self.crossover_prob * self.lam)
+            lam = int(self.crossover_prob * self.population.shape[0])
             lam = lam if lam % 2 == 0 else lam - 1
             parents_idx = np.random.choice(np.arange(self.lam), lam, replace=False, p=p)
             for i in range(0, len(parents_idx), 2):
@@ -59,31 +57,30 @@ class SimpleGA(EDABase):
                                                 self.population[idx2],
                                                 self.fitness[idx1],
                                                 self.fitness[idx2])
-                population.append(child1)
-                population.append(child2)
-            population = np.array(population)
-        else:
-            population = self.population
+                self.population[idx1] = child1
+                self.fitness[idx1] = np.inf
+                self.population[idx2] = child2
+                self.fitness[idx2] = np.inf
         # mutation
         if self.mutation is not None:
-            population = self.mutation(population)
-        dummy_fitness = np.zeros(population.shape[0])
-        dummy_fitness.fill(np.inf)
-        self.sampling_population, _ = self.replacement(self.population,
-                                                       self.fitness,
-                                                       population,
-                                                       dummy_fitness)
+            self.population = self.mutation(self.population)
 
     def sampling(self):
-        if self.sampling_population is None:
+        if self.population is None:
             rand = np.random.rand(self.d, 1)
             cum_theta = self.theta.cumsum(axis=1)
             c = (cum_theta - self.theta <= rand) & (rand < cum_theta)
             return c
         else:
-            indiv = self.sampling_population[self.counter]
+            indiv = self.population[self.counter]
             self.counter += 1
             return indiv
+
+    def is_convergence(self):
+        if self.population is None:
+            return False
+        else:
+            return np.all(self.population == self.population[0])
 
     def __str__(self):
         sup_str = "    " + super(SimpleGA, self).__str__().replace("\n", "\n    ")
