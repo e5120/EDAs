@@ -7,7 +7,7 @@ class Tournament(SelectionBase):
     def __init__(self, k=2, sampling_rate=1.0, replace=True):
         assert 0.0 < sampling_rate <= 1.0
         if not replace:
-            assert 0.0 < sampling_rate <= 0.5
+            assert 0.0 < sampling_rate <= 1 / k
         self.k = k
         self.sampling_rate = sampling_rate
         self.replace = replace
