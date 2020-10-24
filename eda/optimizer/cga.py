@@ -9,6 +9,7 @@ class CGA(EDABase):
         self.all_lam = lam
 
     def update(self, c_one, fxc, range_restriction=False):
+        assert c_one.shape[0] == 2
         self.eval_count += c_one.shape[0]
         # sort by fitness
         idx = np.argsort(fxc)
