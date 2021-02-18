@@ -27,14 +27,3 @@ class OneMax(ObjectiveBase):
         return 'OneMax(\n' \
                '{}' \
                '\n)'.format(sup_str)
-
-
-if __name__=="__main__":
-    from utils import idx2one_hot
-    lam, dim = 2, 5
-    obj = OneMax(dim)
-    population = np.random.randint(0, 2, (lam, dim))
-    print(population)
-    population = idx2one_hot(population, 2)
-    evals, _ = obj(population)
-    print(evals)
