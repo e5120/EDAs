@@ -16,6 +16,12 @@ class FourPeaks(ObjectiveBase):
     https://www.ri.cmu.edu/pub_files/pub2/baluja_shumeet_1995_1/baluja_shumeet_1995_1.pdf
     """
     def __init__(self, dim, t, minimize=True):
+        """
+        Parameters
+        ----------
+        t : int
+            Threshold of the problem. Range is 1 to dim //2 - 1
+        """
         super(FourPeaks, self).__init__(dim, minimize=minimize)
         assert 0 < t < dim // 2
         self.t = t
