@@ -6,7 +6,7 @@ from eda.utils import idx2one_hot
 
 class DeceptiveTrap(ObjectiveBase):
     """
-    A class of Deceptive-k Trap function．
+    A class of Deceptive-k Trap function.
     A user parameter k determines the number of dependencies among variables.
     A user parameter d determines the deceptiveness of the problem.
     When k=3 and d=0.1, the evaluation value is calculated as
