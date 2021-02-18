@@ -1,7 +1,6 @@
 import numpy as np
 
 from eda.objective import ObjectiveBase
-from eda.utils import idx2one_hot
 
 
 class DeceptiveTrap(ObjectiveBase):
