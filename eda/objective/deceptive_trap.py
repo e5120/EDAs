@@ -15,7 +15,10 @@ class DeceptiveTrap(ObjectiveBase):
                      1-2d, i.e., 0.8 if \Sum_{j}c_j = 1,
                      0               if \Sum_{j}c_j = 2,
                      1               if \Sum_{j}c_j = 3,
-    where c = (c_1, c_2, ..., c_D)
+    where c = (c_1, c_2, ..., c_D).
+
+    Reference:
+    https://dl.acm.org/doi/pdf/10.5555/2933923.2933973
     """
     def __init__(self, dim, k=3, d=0.1, minimize=True):
         """
