@@ -20,7 +20,7 @@ class ObjectiveBase(metaclass=ABCMeta):
         """
         assert 0 < dim, \
             "Specify a non-negative integer."
-        self.d = dim
+        self.dim = dim
         self.minimize = minimize
 
         self.optimal_value = -np.inf if minimize else np.inf    # optimal value
@@ -36,7 +36,7 @@ class ObjectiveBase(metaclass=ABCMeta):
 
     def __str__(self):
         return 'dim: {}\n' \
-               'minimize: {}'.format(self.d, self.minimize)
+               'minimize: {}'.format(self.dim, self.minimize)
 
     @abstractmethod
     def evaluate(self, c):
@@ -74,14 +74,14 @@ class ObjectiveBase(metaclass=ABCMeta):
         assert 2 <= len(c.shape) <= 3, \
             "The shape of the input must be as follows: " \
             "({0}, {1}) or (population_size, {0}, {1}).\n" \
-            "The shape of the input is {2}".format(self.d, self.Cmax, c.shape)
+            "The shape of the input is {2}".format(self.dim, self.Cmax, c.shape)
         # convert an individual to a population whose size is one.
         if len(c.shape) == 2:
             c = c[np.newaxis]
         _, dim, cardinality = c.shape
-        assert dim == self.d, \
+        assert dim == self.dim, \
             "The dimension of an individual does not match that of the problem.\n" \
-            "Input({}) and problem({})".format(dim, self.d)
+            "Input({}) and problem({})".format(dim, self.dim)
         assert cardinality == self.Cmax, \
             "The cardinality of an individual does not match that of the problem.\n" \
             "Input({}) and problem({})".format(cardinality, self.Cmax)

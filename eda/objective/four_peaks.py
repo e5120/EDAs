@@ -28,7 +28,7 @@ class FourPeaks(ObjectiveBase):
 
         optimal_value = 2 * dim - t - 1
         self.optimal_value = -optimal_value if minimize else optimal_value
-        self.optimal_indiv = np.zeros(self.d, dtype=np.int)
+        self.optimal_indiv = np.zeros(self.dim, dtype=np.int)
         self.optimal_indiv[:self.t+1] = 1
 
     def evaluate(self, c):
@@ -38,7 +38,7 @@ class FourPeaks(ObjectiveBase):
         z_c = np.argmax(c_inv, axis=1)
         evals = np.maximum(o_c, z_c)
         evals = evals + np.where(np.logical_and(o_c > self.t, z_c > self.t),
-                                 self.d,
+                                 self.dim,
                                  0)
         evals = -evals if self.minimize else evals
         info = {"o_c": o_c, "z_c": z_c}
