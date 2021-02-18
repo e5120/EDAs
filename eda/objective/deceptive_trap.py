@@ -51,3 +51,11 @@ class DeceptiveTrap(ObjectiveBase):
         evals = -evals if self.minimize else evals
         info = {}
         return evals, info
+
+    def __str__(self):
+        sup_str = "    " + super(DeceptiveTrap, self).__str__().replace("\n", "\n    ")
+        return 'Deceptive-k Trap(\n' \
+               '{}\n' \
+               '    k: {}\n' \
+               '    d: {}\n' \
+               ')\n'.format(sup_str, self.k, self.d)

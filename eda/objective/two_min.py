@@ -26,3 +26,9 @@ class TwoMin(ObjectiveBase):
         evals = evals if self.minimize else -evals
         info = {}
         return evals, info
+
+    def __str__(self):
+        sup_str = "    " + super(TwoMin, self).__str__().replace("\n", "\n    ")
+        return 'TwoMin(\n' \
+               '{}' \
+               '\n)'.format(sup_str)

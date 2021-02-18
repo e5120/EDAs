@@ -156,3 +156,15 @@ class WModel(ObjectiveBase):
             j -= 1
             perm[j], perm[n] = perm[n], perm[j]
         return perm
+
+    def __str__(self):
+        sup_str = "    " + super(WModel, self).__str__().replace("\n", "\n    ")
+        return 'W-Model(\n' \
+               '{}\n' \
+               '    mu: {}\n' \
+               '    v: {}\n' \
+               '    m: {}\n' \
+               '    n: {}\n' \
+               '    gamma: {}\n' \
+               ')\n'.format(sup_str, self.mu, self.v,
+                            self.m, self.n, self.gamma)

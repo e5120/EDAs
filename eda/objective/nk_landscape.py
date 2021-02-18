@@ -70,3 +70,10 @@ class NKLandscape(ObjectiveBase):
                 neighbor[i, n] = True
                 _k += 1
         return neighbor
+
+    def __str__(self):
+        sup_str = "    " + super(NKLandscape, self).__str__().replace("\n", "\n    ")
+        return 'NK-landscape(\n' \
+               '{}\n' \
+               '    k: {}\n' \
+               ')\n'.format(sup_str, self.k)
