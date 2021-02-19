@@ -6,9 +6,10 @@ from eda.optimizer.replacement import *
 
 
 def build_logger(args):
-    logger = Logger(args.log_dir, args.logging_step, args.display_step,
-                    args.save_param_step, args)
-    args.log_dir = logger.dir_name
+    logger = Logger(args.log_dir, args,
+                    logging_step=args.logging_step,
+                    display_step=args.display_step)
+    args.log_dir = logger.dir_path
     return logger
 
 
