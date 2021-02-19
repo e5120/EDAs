@@ -16,6 +16,6 @@ python ${root_dir}/main.py \
         --max-num-evals 10000 \
         --trials 3 \
         --seed -1 \
-        --logging-step 1 \
-        --display-step 1 \
+        --display-step 10 \
+        # --logging-step 10 \
         # --log-dir log/boa_${objective}
