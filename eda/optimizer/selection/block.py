@@ -1,29 +1,33 @@
 import numpy as np
 
-from optimizer.selection.selection_base import SelectionBase
+from eda.optimizer.selection import SelectionBase
 
 
 class Block(SelectionBase):
-    def __init__(self, sampling_rate=0.5):
-        self.sampling_rate = sampling_rate
+    """
+    A class of block selection.
+    """
+    def __init__(self, selection_rate=0.5):
+        super(Block, self).__init__(selection_rate)
 
-    def apply(self, population, fitness, sort=False):
+    def apply(self, population, evals, sort=False):
         lam = population.shape[0]
-        idx = np.argsort(fitness)[:int(self.sampling_rate*lam)]
+        idx = np.argsort(evals)[:int(self.selection_rate*lam)]
         population = population[idx]
-        fitness = fitness[idx]
-        # duplicate top of population in term of fitness
-        dup_num = int(np.ceil(1 / self.sampling_rate))
+        evals = evals[idx]
+        # duplicate top of a population in term of the evaluation value
+        dup_num = int(np.ceil(1 / self.selection_rate))
         population = np.tile(population, (dup_num, 1, 1))
-        fitness = np.tile(fitness, dup_num)
+        evals = np.tile(evals, dup_num)
         if population.shape[0] > lam:
             population = population[:lam]
-            fitness = fitness[:lam]
-        # if True, sort by fitness
-        population, fitness = self.sort_by_fitness(population, fitness, sort=sort)
-        return population, fitness
+            evals = evals[:lam]
+        # if True, sort by the evaluation value
+        population, evals = self.sort_by_fitness(population, evals, sort=sort)
+        return population, evals
 
     def __str__(self):
+        sup_str = "    " + super(Block, self).__str__().replace("\n", "\n    ")
         return 'Block Selection(\n' \
-                '    sampling rate: {}' \
-                '\n)'.format(self.sampling_rate)
+               '{}\n' \
+               '\n)'.format(sup_str)

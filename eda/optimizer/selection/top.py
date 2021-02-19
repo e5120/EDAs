@@ -1,24 +1,27 @@
 import numpy as np
 
-from optimizer.selection.selection_base import SelectionBase
+from eda.optimizer.selection import SelectionBase
 
 
 class Top(SelectionBase):
+    """
+    A class of top selection.
+    """
     def __init__(self, selection_rate=0.5):
-        assert 0 < selection_rate <= 1.0
-        self.selection_rate = selection_rate
+        super(Top, self).__init__(selection_rate)
 
-    def apply(self, population, fitness, sort=False):
+    def apply(self, population, evals, sort=False):
         lam = population.shape[0]
         sample_lam = int(np.ceil(self.selection_rate * lam))
-        sorted_idx = np.argsort(fitness)[:sample_lam]
+        sorted_idx = np.argsort(evals)[:sample_lam]
         population = population[sorted_idx]
-        fitness = fitness[sorted_idx]
-        # if True, sort by fitness
-        population, fitness = self.sort_by_fitness(population, fitness, sort=sort)
-        return population, fitness
+        evals = evals[sorted_idx]
+        # if True, sort by the evaluation value
+        population, evals = self.sort_by_fitness(population, evals, sort=sort)
+        return population, evals
 
     def __str__(self):
+        sup_str = "    " + super(Top, self).__str__().replace("\n", "\n    ")
         return 'Top Selection(\n' \
-               '    sampling rate: {}' \
-               '\n)'.format(self.selection_rate)
+               '{}\n' \
+               '\n)'.format(sup_str)

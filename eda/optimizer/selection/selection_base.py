@@ -1,19 +1,51 @@
+from abc import ABCMeta, abstractmethod
+from eda.optimizer import selection
+
 import numpy as np
 
 
-class SelectionBase(object):
-    def __init__(self):
+class SelectionBase(metaclass=ABCMeta):
+    """
+    Base class of selection methods.
+    """
+    def __init__(self, selection_rate):
+        """
+        Parameters
+        ----------
+        selection_rate : float
+            Selection rate, i.e., how many individuals are chosen when the selection method is applied to a population.
+        """
+        assert 0 < selection_rate <= 1.0
+        self.selection_rate = selection_rate
+
+    def __call__(self, population, evals, sort=False):
+        return self.apply(population, evals, sort=sort)
+
+    @abstractmethod
+    def apply(self, population, evals, sort=False):
+        """
+        Apply selection to a population.
+
+        Parameters
+        ----------
+        population : numpy.ndarray
+            Population.
+        evals : numpy.ndarray
+            Evaluation values corresponding to individuals in a population.
+        sort : bool, default False
+            Whether or not to sort a population by the evaluation value.
+        """
         pass
 
-    def __call__(self, population, fitness, sort=False):
-        return self.apply(population, fitness, sort=sort)
-
-    def apply(self, popoulation, fitness, sort=False):
-        raise NotImplementedError
-
-    def sort_by_fitness(self, population, fitness, sort=False):
+    def sort_by_fitness(self, population, evals, sort=False):
+        """
+        Sort by the evaluation value.
+        """
         if sort:
-            idx = np.argsort(fitness)
+            idx = np.argsort(evals)
             population = population[idx]
-            fitness = fitness[idx]
-        return population, fitness
+            evals = evals[idx]
+        return population, evals
+
+    def __str__(self):
+        return 'selection rate: {}'.format(self.selection_rate)
