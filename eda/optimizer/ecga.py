@@ -1,12 +1,23 @@
 import numpy as np
 
-from optimizer.eda_base import EDABase
-from optimizer.util import SubSet, Cache
+from eda.optimizer.eda_base import EDABase
+from eda.optimizer.util import SubSet, Cache
 
 
 class ECGA(EDABase):
+    """
+    A class of extended compact genetic algorithm (ECGA).
+    """
     def __init__(self, categories, replacement,
                  selection=None, lam=500, theta_init=None):
+        """
+        Parameters
+        ----------
+        replacement : eda.optimizer.replacement.replacement_base.ReplacementBase
+            Replacement method.
+        selection : eda.optimizer.selection.selection_base.SelectionBase, default None
+            Selection method.
+        """
         super(ECGA, self).__init__(categories, lam=lam, theta_init=theta_init)
         self.replacement = replacement
         self.selection = selection
@@ -15,28 +26,35 @@ class ECGA(EDABase):
         self.fitness = None
         self.cluster = None
 
-    def update(self, c_one, fxc, range_restriction=False):
-        self.eval_count += c_one.shape[0]
-        # store best individual and evaluation value
-        best_idx = np.argmin(fxc)
-        if self.best_eval > fxc[best_idx]:
-            self.best_eval = fxc[best_idx]
-            self.best_indiv = c_one[best_idx]
+    def update(self, x, evals, range_restriction=False):
+        x, evals = self._preprocess(x, evals)
         if self.selection is not None:
-            c_one, fxc = self.selection(c_one, fxc)
-        # transform one-hot vector to index
-        c_one = np.argmax(c_one, axis=2)
+            x, evals = self.selection(x, evals)
+        x = np.argmax(x, axis=2)
         if self.population is None:
-            self.population = c_one
-            self.fitness = fxc
+            self.population = x
+            self.fitness = evals
+            self.lam = int(self.lam * self.replacement.replace_rate)
         else:
             self.population, self.fitness = self.replacement(self.population,
                                                              self.fitness,
-                                                             c_one,
-                                                             fxc)
+                                                             x,
+                                                             evals)
         self.cluster = self.greedy_mpm_search(self.population)
 
     def greedy_mpm_search(self, population):
+        """
+        Build a greedy magrinal marginal product model.
+
+        Parameters
+        ----------
+        population : numpy.ndarray
+            Population.
+
+        Returns
+        -------
+        Variables after clustering.
+        """
         # initialize subset of cluster
         cluster = [SubSet(i, population[:, i], self.Cmax) for i in range(self.d)]
         # initialize cache
@@ -58,6 +76,19 @@ class ECGA(EDABase):
         return cluster
 
     def initialize_mpm(self, cluster):
+        """
+        Initialize a marginal product model.
+
+        Parameters
+        ----------
+        cluster : list
+            cluster group.
+
+        Returns
+        -------
+        eda.optimizer.util.cache.Cache
+            Cache object for fast computation.
+        """
         cache = Cache(self.d)
         for i in range(len(cluster)-1):
             for j in range(i+1, len(cluster)):
@@ -96,10 +127,10 @@ class ECGA(EDABase):
     def get_c(self, cluster):
         return np.sum([cl.cc for cl in cluster])
 
-    def is_convergence(self):
+    def convergence(self):
         if self.cluster is None:
-            return False
-        return np.abs(np.mean([np.max(c.theta) for c in self.cluster]) - 1.0) < 1e-8
+            return 0.5
+        return np.mean([np.max(c.theta) for c in self.cluster])
 
     def __str__(self):
         sup_str = "    " + super(ECGA, self).__str__().replace("\n", "\n    ")

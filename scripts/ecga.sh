@@ -1,16 +1,22 @@
 . var
 
-# [one_max|four_peaks|deceptive_order_3|deceptive_order_4|knapsack]
-target=deceptive_order_3
-python ${src_dir}/main.py \
-        --objective-type ${target} \
-        --setting-path ${root_dir}/settings/${target}.ini \
+# [one_max|two_min|four_peaks|deceptive_trap|nk_landscape|w_model]
+objective=deceptive_trap
+python ${root_dir}/main.py \
+        --objective-type ${objective} \
+        --dim 30 \
+        -k 3 \
         --optim-type ecga \
         --lam 500 \
-        --train-steps 2000 \
-        --trials 10 \
-        --seed 1 \
+        --selection tournament \
+        --selection-rate 0.5 \
+        --tournament-size 2 \
+        --replacement restricted \
+        --replace-rate 0.5 \
+        --window-size 2 \
+        --max-num-evals 10000 \
+        --trials 3 \
+        --seed -1 \
         --logging-step 1 \
         --display-step 1 \
-        --save-param-step 100000000
-        # --log-dir result/${target}
+        # --log-dir log/ecga_${objective}
