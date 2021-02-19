@@ -9,8 +9,8 @@ python ${root_dir}/main.py \
         --lam 64 \
         --lr 0.5 \
         --selection tournament \
+        --selection-rate 0.5 \
         --tournament-size 2 \
-        --sampling-rate 0.5 \
         --max-num-evals 10000 \
         --trials 3 \
         --seed -1 \
