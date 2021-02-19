@@ -32,13 +32,13 @@ The algorithm of EDA is as follows.
 
 ## Objective function
 The search space is *D*-dimensional bit-strings **c** &in; {0,1}<sup>D</sup>.
-- OneMax: 
-<img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\sum_{i=1}^Dc_i" />
-- TwoMin:
-<img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c},&space;\boldsymbol{y})=\min(\sum_{i=1}^D|c_i-y_i|,\sum_{i=1}^D|(1-c_i)-y_i|)" />
+- OneMax: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\sum_{i=1}^Dc_i" />
+- TwoMin: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c},&space;\boldsymbol{y})=\min(\sum_{i=1}^D|c_i-y_i|,\sum_{i=1}^D|(1-c_i)-y_i|)" />
+  
   - **y** is *D*-dimensional bit-strings which is generated randomly in advance.
-- Four-peaks:
-<img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\max(o(\boldsymbol{c}),z(\boldsymbol{c}))&plus;\textrm{REWARD}" />
+
+- Four-peaks: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\max(o(\boldsymbol{c}),z(\boldsymbol{c}))&plus;\textrm{REWARD}" />
+
   - *o*(**c**) is the number of contiguous ones starting in Position 1.
   - *z*(**c**) is the number of contiguous zeros ending in Position *D*.
   - if *o*(**c**) > *T* and *z*(**c**) > *T*, then REWARD is *D*, else REWARD is 0.
