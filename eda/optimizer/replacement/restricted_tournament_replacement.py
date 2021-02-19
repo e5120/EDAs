@@ -42,6 +42,7 @@ class RestrictedTournament(ReplacementBase):
                 p_evals[p_idx] = c_evals[c_idx]
                 parent[p_idx] = candidate[c_idx]
         return parent, p_evals
+
     def __str__(self):
         sup_str = "    " + super(RestrictedTournament, self).__str__().replace("\n", "\n    ")
         return 'Restricted Tournament Replacement(\n' \
