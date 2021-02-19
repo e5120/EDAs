@@ -1,2 +1,3 @@
-from optimizer.replacement.restricted_replacement import RestrictedReplacement
-from optimizer.replacement.trunc_replacement import TruncatedReplacement
+from eda.optimizer.replacement.replacement_base import ReplacementBase
+from eda.optimizer.replacement.restricted_tournament_replacement import RestrictedTournament
+from eda.optimizer.replacement.truncation_replacement import Truncation
