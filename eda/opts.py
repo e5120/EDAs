@@ -32,7 +32,7 @@ def optimizer_opts(parser):
                         choices=["umda", "pbil", "mimic",
                                  "cga", "ecga", "aff_eda", "boa"],
                         help="specify a optimizer.")
-    parser.add_argument("--lam", type=int, default=100,
+    parser.add_argument("--lam", type=int, required=True,
                         help="population size.")
     parser.add_argument("--lr", type=float, default=0.1,
                         help="learning rate in PBIL and UMDA.")
@@ -54,7 +54,7 @@ def optimizer_opts(parser):
     parser.add_argument("--replacement", type=str, default="restricted",
                         choices=["truncation", "restricted"],
                         help="replacement method which replaces individuals in parent population with ones in candidate population.")
-    parser.add_argument("--replace-rate", type=float, default=0.1,
+    parser.add_argument("--replace-rate", type=float, default=0.5,
                         help="replacement rate, i.e., how many individuals are replaced when the replacement method is applied to a population.")
     parser.add_argument("--constraint-k", type=int, default=None,
                         help="maximum number of parents of each node in BOA.")
@@ -79,22 +79,7 @@ def utils_opts(parser):
 def log_opts(parser):
     parser.add_argument("--log-dir", type=str, default=None,
                         help="directory path to output logs.")
-    parser.add_argument("--logging-step", type=int, default=1,
+    parser.add_argument("--logging-step", type=int, default=10,
                         help="interval of outputting logs to directory.")
     parser.add_argument("--display-step", type=int, default=10,
                         help="interval of displaying logs to stdout.")
-    parser.add_argument("--save-param-step", type=int, default=10,
-                        help="")
-
-
-def plot_opts(parser):
-    parser.add_argument("--path", type=str, required=True,
-                        help="directory path where the logs were output.")
-    parser.add_argument("--save-path", type=str, default=None,
-                        help="directory path where figures are output. If not specified, the directory will be the same as the above path.")
-    parser.add_argument("--target", type=str, default="general_loss",
-                        help="")
-    parser.add_argument("--xaxis", type=str, default="train steps",
-                        help="")
-    parser.add_argument("--yaxis", type=str, default=None,
-                        help="")
