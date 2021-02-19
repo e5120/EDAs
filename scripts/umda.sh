@@ -1,21 +1,19 @@
 . var
 
-# [one_max|four_peaks|deceptive_order_3|deceptive_order_4|knapsack]
-target=one_max
-python ${src_dir}/main.py \
-        --objective-type ${target} \
-        --setting-path ${root_dir}/settings/${target}.ini \
+# [one_max|two_min|four_peaks|deceptive_trap|nk_landscape|w_model]
+objective=one_max
+python ${root_dir}/main.py \
+        --objective-type ${objective} \
+        --dim 100 \
         --optim-type umda \
-        --lam 100 \
-        --lr 0.1 \
+        --lam 64 \
+        --lr 0.5 \
         --selection tournament \
         --tournament-size 2 \
-        --sampling-rate 1.0 \
-        --selection-rate 0.005 \
-        --train-steps 1000 \
+        --sampling-rate 0.5 \
+        --max-num-evals 10000 \
         --trials 3 \
-        --seed 1 \
+        --seed -1 \
         --logging-step 1 \
         --display-step 1 \
-        --save-param-step 100000000
-        # --log-dir result/${target}
+        # --log-dir log/cga_${objective}
