@@ -50,5 +50,5 @@ The search space is *D*-dimensional bit-strings **c** &in; {0,1}<sup>D</sup>.
   <img src="https://latex.codecogs.com/gif.latex?g(c_1,&space;c_2,&space;c_3)&space;=&space;\left\{&space;\begin{array}{ll}&space;1-d&space;&&space;\sum_{i}c_i&space;=&space;0&space;\\&space;1-2d&space;&&space;\sum_{i}c_i&space;=&space;1&space;\\&space;0&space;&&space;\sum_{i}c_i&space;=&space;2&space;\\&space;1&space;&&space;\sum_{i}c_i&space;=&space;3,&space;\\&space;\end{array}&space;\right." />
 
   - where *k* = 3 and *d* is a user parameter
-- NK-landscape
-- W-Model
+- [NK-landscape](http://ncra.ucd.ie/wp-content/uploads/2020/08/SocialLearning_GECCO2019.pdf)
+- [W-Model](http://iao.hfuu.edu.cn/images/publications/W2018TWMATBBDOBPIFTBGW.pdf)

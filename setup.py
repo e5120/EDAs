@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 with open("README.md", "r") as f:
@@ -6,7 +6,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="eda",
-    version="0.0.1",
+    version="1.0.0",
     description="Estimation of Distribution Algorithms",
     author="sho shimazu",
     long_description=long_description,
