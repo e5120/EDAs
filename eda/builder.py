@@ -1,11 +1,8 @@
-from logger import Logger
-from objective import Knapsack, OneMax, FourPeaks, DeceptiveOrder3, DeceptiveOrder4
-from objective.util import Item
-from optimizer import UMDA, PBIL, MIMIC, ECGA, AffEDA, SimpleGA, CGA
-from optimizer.selection import Block, Tournament, Roulette, Top
-from optimizer.crossover import Uniform, TwoPoint
-from optimizer.mutation import Mutation
-from optimizer.replacement import RestrictedReplacement, TruncatedReplacement
+from eda.logger import Logger
+from eda.objective import *
+from eda.optimizer import *
+from eda.optimizer.selection import *
+from eda.optimizer.replacement import *
 
 
 def build_logger(args):
@@ -15,42 +12,43 @@ def build_logger(args):
     return logger
 
 
-def build_objective(args, noise=False):
-    with open(args.setting_path) as f:
-        if args.objective_type == "knapsack":
-            target = -int(f.readline().split(",")[1])
-            K = int(f.readline().split(",")[1])
-            C = int(f.readline().split(",")[1])
-            items = []
-            for line in f:
-                n, v, w = line.split(",")
-                items.append(Item(n, int(v), int(w)))
-            D = len(items)
-            return Knapsack(K, D, C, items, target, noise=noise)
-        elif args.objective_type == "one_max":
-            target = -int(f.readline().split(",")[1])
-            D = int(f.readline().split(",")[1])
-            return OneMax(D, target, noise=noise)
-        elif args.objective_type == "four_peaks":
-            target = -int(f.readline().split(",")[1])
-            D = int(f.readline().split(",")[1])
-            T = float(f.readline().split(",")[1])
-            return FourPeaks(D, T, target, noise=noise)
-        elif args.objective_type == "deceptive_order_3":
-            target = -int(f.readline().split(",")[1])
-            D = int(f.readline().split(",")[1])
-            d = float(f.readline().split(",")[1])
-            return DeceptiveOrder3(D, target, d=d)
-        elif args.objective_type == "deceptive_order_4":
-            target = -int(f.readline().split(",")[1])
-            D = int(f.readline().split(",")[1])
-            return DeceptiveOrder4(D, target)
-        else:
-            return NotImplementedError
+def build_objective(args):
+    if args.objective_type == "one_max":
+        return OneMax(args.dim,
+                      minimize=args.minimize)
+    elif args.objective_type == "two_min":
+        return TwoMin(args.dim,
+                      minimize=args.minimize)
+    elif args.objective_type == "four_peaks":
+        return FourPeaks(args.dim,
+                         t=args.t,
+                         minimize=args.minimize)
+    elif args.objective_type == "deceptive_trap":
+        return DeceptiveTrap(args.dim,
+                             k=args.k,
+                             d=args.d,
+                             minimize=args.minimize)
+    elif args.objective_type == "nk_landscape":
+        return NKLandscape(args.dim,
+                           k=args.k,
+                           seed=args.nk_seed,
+                           minimize=args.minimize)
+    elif args.objective_type == "w_model":
+        return WModel(args.dim,
+                      mu=args.mu,
+                      v=args.v,
+                      m=args.m,
+                      n=args.n,
+                      gamma=args.gamma,
+                      minimize=args.minimize)
+    else:
+        raise NotImplementedError
 
 
 def build_optimizer(args, objective):
     categories = objective.categories
+    selection = build_selection(args)
+    replacement = build_replacement(args, len(categories))
     if args.optim_type == "umda":
         selection = build_selection(args)
         return UMDA(categories, args.lr, selection,
@@ -62,45 +60,33 @@ def build_optimizer(args, objective):
                     mut_prob=args.mutation_prob,
                     mut_shift=args.mutation_shift)
     elif args.optim_type == "mimic":
-        replacement = build_replacement(args, len(categories))
         return MIMIC(categories, replacement,
-                     lam=args.lam,
-                     replace_rate=args.replace_rate)
+                     lam=args.lam)
     elif args.optim_type == "cga":
         return CGA(categories,
                    lam=args.lam)
     elif args.optim_type == "ecga":
-        selection = build_selection(args)
-        replacement = build_replacement(args, len(categories))
         return ECGA(categories, replacement,
                     lam=args.lam,
                     selection=selection)
     elif args.optim_type == "aff_eda":
-        selection = build_selection(args)
-        replacement = build_replacement(args, len(categories))
         return AffEDA(categories, replacement,
                       lam=args.lam,
                       selection=selection)
-    elif args.optim_type == "ga":
-        selection = build_selection(args)
-        crossover = build_crossover(args)
-        mutation = build_mutation(args)
-        replacement = build_replacement(args, len(categories))
-        return SimpleGA(categories, replacement,
-                        lam=args.lam,
-                        selection=selection,
-                        crossover=crossover,
-                        mutation=mutation,
-                        crossover_prob=args.crossover_prob)
+    elif args.optim_type == "boa":
+        return BOA(categories, selection, replacement,
+                   lam=args.lam,
+                   k=args.constraint_k,
+                   criterion=args.metric)
     else:
-        return NotImplementedError
+        raise NotImplementedError
 
 
 def build_selection(args):
     if args.selection == "block":
-        return Block(sampling_rate=args.sampling_rate)
+        return Block(selection_rate=args.selection_rate)
     elif args.selection == "tournament":
-        return Tournament(k=args.tournament_size, sampling_rate=args.sampling_rate, replace=args.with_replacement)
+        return Tournament(selection_rate=args.selection_rate, k=args.tournament_size, replace=args.with_replacement)
     elif args.selection == "roulette":
         return Roulette(selection_rate=args.selection_rate)
     elif args.selection == "top":
@@ -108,33 +94,15 @@ def build_selection(args):
     elif args.selection == "none":
         return None
     else:
-        return NotImplementedError
-
-
-def build_crossover(args):
-    if args.crossover == "uniform":
-        return Uniform()
-    elif args.crossover == "two_point":
-        return TwoPoint()
-    elif args.crossover == "none":
-        return None
-    else:
-        return NotImplementedError
-
-
-def build_mutation(args):
-    if args.mutation == "mutation":
-        return Mutation(args.mutation_prob)
-    elif args.mutation == "none":
-        return None
-    else:
-        return NotImplementedError
+        raise NotImplementedError
 
 
 def build_replacement(args, dim):
-    if args.replacement == "restricted":
-        return RestrictedReplacement(args.window_size, dim)
-    elif args.replacement == "trunc":
-        return TruncatedReplacement()
+    if args.replacement == "truncation":
+        return Truncation(replace_rate=args.replace_rate)
+    elif args.replacement == "restricted":
+        return RestrictedTournament(dim,
+                                    replace_rate=args.replace_rate,
+                                    window_size=args.window_size)
     else:
-        return NotImplementedError
+        raise NotImplementedError
