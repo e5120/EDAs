@@ -1,57 +1,48 @@
 import numpy as np
 from scipy import stats
 
-from optimizer.eda_base import EDABase
+from eda.optimizer.eda_base import EDABase
 
 
 class MIMIC(EDABase):
-    def __init__(self, categories, replacement,
-                 replace_rate=0.2, lam=128, theta_init=None):
+    """
+    A class of mutual-information-maximizing input clustering (MIMIC).
+    """
+    def __init__(self, categories, replacement, lam=128, theta_init=None):
+        """
+        Parameters
+        ----------
+        replacement : eda.optimizer.replacement.replacement_base.RepalcementBase
+            Replacement method.
+        """
         super(MIMIC, self).__init__(categories, lam=lam, theta_init=theta_init)
-        self.replace_rate = replace_rate
         self.replacement = replacement
-        self.total_lam = self.lam
+
         self.population = None
         self.fitness = None
         self.uni_freq = None
         self.bi_freq = None
         self.order = None
 
-    def update(self, c_one, fxc, range_restriction=False):
-        self.eval_count += c_one.shape[0]
-        # sort by fitness and get the index of the top of "selection_rate"%
-        best_idx = np.argmin(fxc)
-        # store best individual and evaluation value
-        if self.best_eval > fxc[best_idx]:
-            self.best_eval = fxc[best_idx]
-            self.best_indiv = c_one[best_idx]
-        # replacement
+    def update(self, x, evals, range_restriction=False):
+        x, evals = self._preprocess(x, evals)
         if self.population is None:
-            self.population = c_one
-            self.fitness = fxc
-            self.lam = int(np.ceil(self.lam * self.replace_rate))
+            self.population = x
+            self.fitness = evals
+            self.lam = int(np.ceil(self.lam * self.replacement.replace_rate))
         else:
             self.population, self.fitness = self.replacement(self.population,
                                                              self.fitness,
-                                                             c_one,
-                                                             fxc)
+                                                             x,
+                                                             evals)
         # get parent population
         idx = np.argsort(self.fitness)
         self.population = self.population[idx]
         self.fitness = self.fitness[idx]
-        parent = self.population[:self.total_lam-self.lam]
+        parent = self.population[:-self.lam]
         # get frequency of each bit
         self.uni_freq = self.calc_uni_frequency(parent)
-        # if range_restriction is True, clipping
-        for i in range(self.d):
-            ci = self.C[i]
-            theta_min = 1.0 / (self.valid_d * (ci - 1)) if range_restriction and ci > 1 else 0.0
-            self.theta[i, :ci] = np.maximum(self.theta[i, :ci], theta_min)
-            theta_sum = self.theta[i, :ci].sum()
-            tmp = theta_sum - theta_min * ci
-            self.theta[i, :ci] -= (theta_sum - 1.0) * (self.theta[i, :ci] - theta_min) / tmp
-            self.theta[i, :ci] /= self.theta[i, :ci].sum()
-        # get frequency of at each pairwise bits
+        # get frequency of each pairwise bits
         self.bi_freq = self.calc_bi_frequency(parent)
         # get permutation of binary bit
         self.order = self.calc_permutation_order(self.uni_freq, self.bi_freq)
@@ -102,7 +93,7 @@ class MIMIC(EDABase):
 
     def sampling(self):
         # only first generation
-        if self.total_lam == self.lam:
+        if self.population is None:
             rand = np.random.rand(self.d, 1)
             cum_theta = self.theta.cumsum(axis=1)
             c = (cum_theta - self.theta <= rand) & (rand < cum_theta)
@@ -126,9 +117,14 @@ class MIMIC(EDABase):
                 cur_bit = self.order[k]
             return c
 
+    def convergence(self):
+        # ToDo: implement
+        return super().convergence()
+
     def __str__(self):
         sup_str = "    " + super(MIMIC, self).__str__().replace("\n", "\n    ")
+        rep_str = self.replacement.__str__().replace("\n", "\n    ")
         return 'MIMIC(\n' \
                '{}\n' \
-               '    replace rate: {}\n' \
-               ')'.format(sup_str, self.replace_rate)
+               '    {}\n' \
+               ')'.format(sup_str, rep_str)
