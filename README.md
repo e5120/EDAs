@@ -32,17 +32,23 @@ The algorithm of EDA is as follows.
 
 ## Objective function
 The search space is *D*-dimensional bit-strings **c** &in; {0,1}<sup>D</sup>.
-- OneMax: ![\begin{equation*}
-f(\boldsymbol{c})=\sum_{i=1}^{D}c_i
-\end{equation*}
-](https://render.githubusercontent.com/render/math?math=%5Cdisplaystyle+%5Cbegin%7Bequation%2A%7D%0Af%28%5Cboldsymbol%7Bc%7D%29%3D%5Csum_%7Bi%3D1%7D%5E%7BD%7Dc_i%0A%5Cend%7Bequation%2A%7D%0A)
-- TwoMin: $f(\bm{c}, \bm{y})=\min(\sum_{i=1}^D|c_i-y_i|,\sum_{i=1}^D|(1-c_i)-y_i|)$
-  - $\bm{y}$ is *D*-dimensional bit-strings which is generated randomly in advance.
-- Four-peaks: $f(\bm{c})=\max(o(\bm{c}),z(\bm{c}))+$REWARD
-  - $o(\bm{c})$ is the number of contiguous ones starting in Position 1.
-  - $z(\bm{c})$ is the number of contiguous zeros ending in Position *D*.
-  - if $o(\bm{c}) > T$ and $z(\bm{c}) > T$, then REWARD is *D*, else REWARD is 0.
-    - $T$ is a user parameter.
-- Deceptive-k Trap
+- OneMax: 
+<img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\sum_{i=1}^Dc_i" />
+- TwoMin:
+<img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c},&space;\boldsymbol{y})=\min(\sum_{i=1}^D|c_i-y_i|,\sum_{i=1}^D|(1-c_i)-y_i|)" />
+  - **y** is *D*-dimensional bit-strings which is generated randomly in advance.
+- Four-peaks:
+<img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\max(o(\boldsymbol{c}),z(\boldsymbol{c}))&plus;\textrm{REWARD}" />
+  - *o*(**c**) is the number of contiguous ones starting in Position 1.
+  - *z*(**c**) is the number of contiguous zeros ending in Position *D*.
+  - if *o*(**c**) > *T* and *z*(**c**) > *T*, then REWARD is *D*, else REWARD is 0.
+    - *T* is a user parameter.
+- Deceptive-k Trap: There is a user parameter *k* which determines the number of dependencies of variables.
+
+  <img src="https://latex.codecogs.com/gif.latex?f(\boldsymbol{c})&space;=&space;\sum_{i=0}^{D/3-1}g(c_{3i&plus;1},c_{3i&plus;2},c_{3i&plus;3})," />
+  <br>
+  <img src="https://latex.codecogs.com/gif.latex?g(c_1,&space;c_2,&space;c_3)&space;=&space;\left\{&space;\begin{array}{ll}&space;1-d&space;&&space;\sum_{i}c_i&space;=&space;0&space;\\&space;1-2d&space;&&space;\sum_{i}c_i&space;=&space;1&space;\\&space;0&space;&&space;\sum_{i}c_i&space;=&space;2&space;\\&space;1&space;&&space;\sum_{i}c_i&space;=&space;3,&space;\\&space;\end{array}&space;\right." />
+
+  - where *k* = 3 and *d* is a user parameter
 - NK-landscape
 - W-Model
