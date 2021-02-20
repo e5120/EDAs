@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from eda.optimizer import selection
 
 import numpy as np
 
@@ -37,14 +36,13 @@ class SelectionBase(metaclass=ABCMeta):
         """
         pass
 
-    def sort_by_fitness(self, population, evals, sort=False):
+    def sort_by_fitness(self, population, evals):
         """
         Sort by the evaluation value.
         """
-        if sort:
-            idx = np.argsort(evals)
-            population = population[idx]
-            evals = evals[idx]
+        idx = np.argsort(evals)
+        population = population[idx]
+        evals = evals[idx]
         return population, evals
 
     def __str__(self):
