@@ -101,7 +101,6 @@ class TestWModel(TestCase):
         evals_sample = np.array([[3, 6]])
         evals = objective.ruggedness_and_deceptiveness_layer(evals_sample)
         print(evals)
-        print(objective.gamma_prime)
         print(objective.perm)
 
     def test_evaluation(self):
