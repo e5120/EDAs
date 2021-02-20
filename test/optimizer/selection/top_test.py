@@ -13,7 +13,7 @@ class TestTop(TestCase):
         evals = np.arange(lam)[::-1]
 
         selection = Top(0.5)
-        p, e = selection(population, evals, sort=True)
+        p, e = selection(population, evals, sort=False)
         self.assertEqual(np.all(population[5:][::-1] == p), True)
         self.assertEqual(np.all(evals[5:][::-1] == e), True)
 
