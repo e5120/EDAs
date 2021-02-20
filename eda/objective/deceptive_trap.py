@@ -6,15 +6,18 @@ from eda.objective import ObjectiveBase
 class DeceptiveTrap(ObjectiveBase):
     """
     A class of Deceptive-k Trap function.
+
+    There are two user parameters, k and d.
     A user parameter k determines the number of dependencies among variables.
     A user parameter d determines the deceptiveness of the problem.
     When k=3 and d=0.1, the evaluation value is calculated as
-    f(c) = \Sum_{i=0}^{D/3-1}g(c_{3i+1},c_{3i+2},c_{3i+3}),
-    g(c_1,c_2,c_3) = 1-d,  i.e., 0.9 if \Sum_{j}c_j = 0,
-                     1-2d, i.e., 0.8 if \Sum_{j}c_j = 1,
-                     0               if \Sum_{j}c_j = 2,
-                     1               if \Sum_{j}c_j = 3,
-    where c = (c_1, c_2, ..., c_D).
+
+    f(c) = \sum_{i=0}^{D/3-1}g(c_{3i+1},c_{3i+2},c_{3i+3}),
+    g(c_1,c_2,c_3) = 0.9 (1 - d)  if \sum_{j}c_j = 0,
+                     0.8 (1 - 2d) if \sum_{j}c_j = 1,
+                     0            if \sum_{j}c_j = 2,
+                     1            if \sum_{j}c_j = 3,
+    where c is $D$-dimensional bit-strings.
 
     Reference:
     https://dl.acm.org/doi/pdf/10.5555/2933923.2933973
@@ -24,9 +27,9 @@ class DeceptiveTrap(ObjectiveBase):
         Parameters
         ----------
         k : int, default 3
-            The number of dependencies among variables.
+            The number of dependencies among variables for each variable.
         d : float, default 0.1
-            A user parameter which determines the deceptiveness of the problem.
+            Determines the deceptiveness of the problem.
         """
         super(DeceptiveTrap, self).__init__(dim, minimize=minimize)
         assert dim % k == 0
@@ -41,7 +44,7 @@ class DeceptiveTrap(ObjectiveBase):
         c = self._check_shape(c)
         c = c.reshape(c.shape[0], -1, self.k)
         c = np.sum(c, axis=2)
-        evals = np.zeros((c.shape[0], c.shape[1]))
+        evals = np.zeros(c.shape)
         for i in range(self.k - 1):
             evals = np.where(c == i,
                              1.0 - (i + 1) * self.d,

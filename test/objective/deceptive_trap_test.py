@@ -4,6 +4,7 @@ from unittest import TestCase, main
 import numpy as np
 
 from eda.objective import DeceptiveTrap
+from eda.utils import idx2one_hot
 
 
 class TestDeceptiveTrap(TestCase):
@@ -11,6 +12,13 @@ class TestDeceptiveTrap(TestCase):
         objective = DeceptiveTrap(6, minimize=True)
         evals, _ = objective(objective.get_optimum(one_hot=True))
         self.assertEqual(evals.item(), objective.optimal_value)
+
+    def test_sub_optimum(self):
+        dim, k, d = 6, 3, 0.1
+        objective = DeceptiveTrap(dim, k=k, d=d, minimize=True)
+        sub_optimum = np.zeros(dim, dtype=np.int)
+        evals, _ = objective(idx2one_hot(sub_optimum, 2))
+        self.assertEqual(evals.item(), -(dim / k) * (1 - d))
 
     def test_evaluate(self):
         objective = DeceptiveTrap(6, minimize=True)
