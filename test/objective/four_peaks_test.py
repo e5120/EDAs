@@ -8,7 +8,7 @@ from eda.utils import idx2one_hot
 
 
 class TestFourPeaks(TestCase):
-    def test_optimal(self):
+    def test_optimum(self):
         objective = FourPeaks(7, 2, minimize=True)
         optimum = objective.get_optimum(one_hot=True)
         evals, info = objective(optimum)
@@ -16,6 +16,16 @@ class TestFourPeaks(TestCase):
         optimum = np.logical_not(optimum)[::-1]
         evals, _ = objective(optimum)
         self.assertEqual(evals.item(), objective.optimal_value)
+
+    def test_sub_optimum(self):
+        dim, t = 7, 2
+        objective = FourPeaks(dim, t=t, minimize=True)
+        sub_optimum = np.zeros(dim, dtype=np.int)
+        evals, _ = objective(idx2one_hot(sub_optimum, 2))
+        self.assertEqual(evals.item(), -dim)
+        sub_optimum = np.ones(dim, dtype=np.int)
+        evals, _ = objective(idx2one_hot(sub_optimum, 2))
+        self.assertEqual(evals.item(), -dim)
 
     def test_evaluation(self):
         dim = 6
