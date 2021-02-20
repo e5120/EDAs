@@ -6,8 +6,9 @@ from eda.objective import ObjectiveBase
 class TwoMin(ObjectiveBase):
     """
     A class of two-min function.
-    f(c, y) = min(\Sum_{i=1}^{D}|c_i - y_i|, \Sum_{i=1}^{D}|(1 - c_i) - y_i|)
-    where c = (c_1, c_2, ..., c_D) and y = (y_1, y_2, ..., y_D) which is randomly generated in advance.
+
+    f(c, y) = \min(\sum_{i=1}^{D}|c_i - y_i|, \sum_{i=1}^{D}|(1 - c_i) - y_i|),
+    where c is $D$-dimensional bit-strings, and y is $D$-dimensional bit-strings which is randomly generated in advance.
 
     Reference:
     https://arxiv.org/abs/1106.3708
