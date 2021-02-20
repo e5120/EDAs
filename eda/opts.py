@@ -45,6 +45,9 @@ def optimizer_opts(parser):
                         help="selection rate, i.e., how many individuals are chosen when the selection method is applied to a population.")
     parser.add_argument("--tournament-size", type=int, default=2,
                         help="tournament size in the tournament selection.")
+    parser.add_argument("--selection-criterion", type=str, default="eval",
+                        choices=["eval", "rank"],
+                        help="criterion to generate a roulette in roulette selection.")
     parser.add_argument("--with-replacement", action="store_true",
                         help="sampling with replacement or not")
     parser.add_argument("--mutation-prob", type=float, default=0.01,

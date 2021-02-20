@@ -89,7 +89,7 @@ def build_selection(args):
     elif args.selection == "tournament":
         return Tournament(selection_rate=args.selection_rate, k=args.tournament_size, replace=args.with_replacement)
     elif args.selection == "roulette":
-        return Roulette(selection_rate=args.selection_rate)
+        return Roulette(selection_rate=args.selection_rate, criterion=args.selection_criterion)
     elif args.selection == "top":
         return Top(selection_rate=args.selection_rate)
     elif args.selection == "none":
