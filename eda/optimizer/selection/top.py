@@ -17,11 +17,12 @@ class Top(SelectionBase):
         population = population[sorted_idx]
         evals = evals[sorted_idx]
         # if True, sort by the evaluation value
-        population, evals = self.sort_by_fitness(population, evals, sort=sort)
+        if sort:
+            population, evals = self.sort_by_fitness(population, evals)
         return population, evals
 
     def __str__(self):
         sup_str = "    " + super(Top, self).__str__().replace("\n", "\n    ")
         return 'Top Selection(\n' \
-               '{}\n' \
+               '{}' \
                '\n)'.format(sup_str)
