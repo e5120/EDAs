@@ -7,8 +7,11 @@ from eda.utils import packbits
 class NKLandscape(ObjectiveBase):
     """
     A class of NK-landscape.
+
     The NK-landscape has a parameter k which specifies that how many bits each bit depends on.
-    The evaluation value of a bit is obtained from a lookup table by using a combination of values of k+1 bits and the evaluation value of an individual is calculated by averaging the evaluation values of all bits.
+    The evaluation value of a bit is obtained from a lookup table by using a
+    combination of values of k+1 bits and the evaluation value of an individual
+    is calculated by averaging the evaluation values of all bits.
     Here, the k bits and the lookup table are randomly generated in advance.
 
     Reference:
@@ -19,11 +22,12 @@ class NKLandscape(ObjectiveBase):
         Parameters
         ----------
         k : int, default 2
-            A user parameter which is determined the ruggedness of the problem.
+            A user parameter which determines the ruggedness of the problem.
             How many bits each bit depends on.
         seed : int, default 1
             A random number seed.
-            The seed is required to determine the k bits and the lookup table.
+            The seed is required to determine the k bits and
+            to generate the lookup table.
         """
         super(NKLandscape, self).__init__(dim, minimize=minimize)
         assert 0 < k < dim
@@ -58,17 +62,17 @@ class NKLandscape(ObjectiveBase):
 
     def get_neighbor(self):
         """
-        Determine the k bits which depends on each bit.
+        Determine the k bits for each bit.
         """
         neighbor = np.zeros((self.dim, self.dim), dtype=np.bool)
         for i in range(self.dim):
-            _k = 0
-            while _k < self.k:
+            k = 0
+            while k < self.k:
                 n = np.random.choice(self.dim)
                 if i == n or neighbor[i, n]:
                     continue
                 neighbor[i, n] = True
-                _k += 1
+                k += 1
         return neighbor
 
     def __str__(self):
