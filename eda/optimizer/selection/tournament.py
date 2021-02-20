@@ -40,7 +40,8 @@ class Tournament(SelectionBase):
         population = population[winner_idx]
         evals = evals[winner_idx]
         # if True, sort by the evaluations
-        population, evals = self.sort_by_fitness(population, evals, sort=sort)
+        if sort:
+            population, evals = self.sort_by_fitness(population, evals)
         return population, evals
 
     def __str__(self):
