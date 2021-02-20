@@ -87,9 +87,6 @@ class TestOneMax(TestCase):
         with self.assertRaises(AssertionError):
             sample = [[[1, 0, 0], [0, 1, 0], [1, 0, 0]]]
             self.assertRaises(objective(sample))
-        with self.assertRaises(AssertionError):
-            sample = ([1, 0], [0, 1], [1, 0])
-            self.assertRaises(objective(sample))
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ from eda.utils import idx2one_hot
 
 class ObjectiveBase(metaclass=ABCMeta):
     """
-    Base class of black-box discrete optimization problem.
+    Base class of the black-box discrete optimization problem.
     """
     def __init__(self, dim, minimize=True):
         """
@@ -41,12 +41,12 @@ class ObjectiveBase(metaclass=ABCMeta):
     @abstractmethod
     def evaluate(self, c):
         """
-        Take an individual or population which is group of individuals as an input, return the evaluation value of each individual.
+        Take an individual or a population which is group of individuals as an input, return the evaluation value of each individual.
 
         Parameters
         ----------
         c : array-like
-            A individual or a population.
+            An individual or a population.
 
         Returns
         -------
@@ -60,7 +60,8 @@ class ObjectiveBase(metaclass=ABCMeta):
         Parameters
         ----------
         c : array-like
-            A individual or a population.
+            An individual or a population.
+            If c is an individual, assume that the shape of c is (dim, one-hot), otherwise (population_size, dim, one-hot).
 
         Returns
         -------
@@ -68,20 +69,19 @@ class ObjectiveBase(metaclass=ABCMeta):
             A population after the input c was converted to ndarray.
             The shape is (population_size, dim).
         """
-        assert isinstance(c, (list, np.ndarray)), \
-            "Input c is required to be of type list or numpy.ndarray"
+        assert isinstance(c, (list, tuple, np.ndarray)), \
+            "Input c is required to be of type list, tuple, or numpy.ndarray."
         c = np.array(c)
         assert 2 <= len(c.shape) <= 3, \
-            "The shape of the input must be as follows: " \
-            "({0}, {1}) or (population_size, {0}, {1}).\n" \
-            "The shape of the input is {2}".format(self.dim, self.Cmax, c.shape)
+            "The shape must be ({0}, {1}) or (population_size, {0}, {1}).\n\t\t" \
+            "The shape of the input was {2}".format(self.dim, self.Cmax, c.shape)
         # convert an individual to a population whose size is one.
         if len(c.shape) == 2:
             c = c[np.newaxis]
         _, dim, cardinality = c.shape
         assert dim == self.dim, \
-            "The dimension of an individual does not match that of the problem.\n" \
-            "Input({}) and problem({})".format(dim, self.dim)
+            "The dimension of an individual ({}) does not " \
+            "match that of the problem ({}).\n".format(dim, self.dim)
         assert cardinality == self.Cmax, \
             "The cardinality of an individual does not match that of the problem.\n" \
             "Input({}) and problem({})".format(cardinality, self.Cmax)
@@ -90,19 +90,20 @@ class ObjectiveBase(metaclass=ABCMeta):
 
     def get_optimum(self, one_hot=False):
         """
-        Return an optimum solution of the problem.
+        Return the optimum solution of the problem.
 
         Parameters
         ----------
         one_hot : bool, default False
-            Whether or not to return the optimum with one-hot.
+            Whether or not to return the optimum with one-hot expression.
 
         Returns
         -------
-        numpy.ndarray or str
-           The optimum solution. If the optimum is not defined, return "Not defined."
+        numpy.ndarray
+           The optimum solution.
+           If the optimum is not defined, return None"
         """
         if self.optimal_indiv is None:
-            return "Not defined."
+            return None
         else:
             return idx2one_hot(self.optimal_indiv, self.Cmax) if one_hot else self.optimal_indiv
