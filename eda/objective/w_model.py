@@ -6,6 +6,7 @@ from eda.objective import ObjectiveBase
 class WModel(ObjectiveBase):
     """
     A class of w-model function.
+
     The w-model function is a benchmark function which combines several properties of the black-box discrete optimization.
     The properties introduced into w-model function is as follows.
     1)Neutrality
@@ -29,7 +30,7 @@ class WModel(ObjectiveBase):
         n : int, default 5
             The dimension of each objective function.
         gamma : int, default 0
-            A user parameter for ruggedness.
+            A user parameter for ruggedness and deceptiveness.
         """
         super(WModel, self).__init__(dim, minimize=minimize)
         assert 0 < mu <= dim
@@ -42,8 +43,7 @@ class WModel(ObjectiveBase):
         self.m = m
         self.n = n
         self.gamma = gamma
-        self.gamma_prime = self._translate(gamma, n)
-        self.perm = self._permutate(self.gamma_prime, n)
+        self.perm = self._permutate(self._translate(gamma, n), n)
         self.target = np.zeros(n, dtype=np.int)
         self.target[0::2] = 1
         self.optimal_value = 0.0
