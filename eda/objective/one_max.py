@@ -6,7 +6,9 @@ from eda.objective import ObjectiveBase
 class OneMax(ObjectiveBase):
     """
     A class of one-max function.
-    f(c) = \Sum_{i=1}^{D}(c_i), where c = (c_1, c_2, ..., c_D).
+
+    f(c) = \sum_{i=1}^{D}(c_i),
+    where c = (c_1, c_2, ..., c_D) \in {0, 1}^{D}.
     """
     def __init__(self, dim, minimize=True):
         super(OneMax, self).__init__(dim, minimize=minimize)
@@ -14,9 +16,7 @@ class OneMax(ObjectiveBase):
         self.optimal_indiv = np.full(dim, 1)    # (1, 1, ..., 1)
 
     def evaluate(self, c):
-        # The shape of c is (dim, one-hot) or (population_size, dim, one-hot)
         c = self._check_shape(c)
-        # The shape of c is (population_size, dim)
         evals = np.sum(c, axis=1)
         evals = -evals if self.minimize else evals
         info = {}
