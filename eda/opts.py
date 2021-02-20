@@ -70,7 +70,7 @@ def optimizer_opts(parser):
 def utils_opts(parser):
     parser.add_argument("--seed", type=int, default=-1,
                         help="a random number seed for trials.")
-    parser.add_argument("--seeds", type=str, nargs="+", default=None,
+    parser.add_argument("--seeds", type=int, nargs="+", default=None,
                         help="a random number seed for each trials. the length of the seeds must match the number of trials.")
     parser.add_argument("--trials", type=int, default=1,
                         help="how many independent trials.")
