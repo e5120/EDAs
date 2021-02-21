@@ -33,6 +33,13 @@ class SelectionBase(metaclass=ABCMeta):
             Evaluation values corresponding to individuals in a population.
         sort : bool, default False
             Whether or not to sort a population by the evaluation value.
+
+        Returns
+        -------
+        numpy.ndarray
+            A population which includes chosen individuals of the input popoulation.
+        numpy.ndarray
+            The evaluation values corresponding to the above population.
         """
         pass
 
