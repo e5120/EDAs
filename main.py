@@ -51,7 +51,7 @@ def main(args):
             "success": success,
             "iters": iteration,
             "num_evals": optim.num_evals,
-            "elapsed_time": times[-1],
+            "elapsed_time": time.time() - start,
             "best_eval": optim.best_eval,
             "best_indiv": np.argmax(optim.best_indiv, axis=-1),
         }
