@@ -1,8 +1,6 @@
-. var
-
 # [one_max|two_min|four_peaks|deceptive_trap|nk_landscape|w_model]
 objective=one_max
-python ${root_dir}/main.py \
+python ../main.py \
         --objective-type ${objective} \
         --dim 50 \
         --optim-type cga \

@@ -1,4 +1,0 @@
-root_dir=/path/to/root_dir
-
-src_dir=${root_dir}/eda
-script_dir=${root_dir}/scripts
