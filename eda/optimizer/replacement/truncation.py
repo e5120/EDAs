@@ -33,5 +33,5 @@ class Truncation(ReplacementBase):
     def __str__(self):
         sup_str = "    " + super(Truncation, self).__str__().replace("\n", "\n    ")
         return 'Truncation Replacement(\n' \
-               '{}\n' \
+               '{}' \
                '\n)'.format(sup_str)
