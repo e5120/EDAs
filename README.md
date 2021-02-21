@@ -21,7 +21,7 @@ The algorithm of EDA is as follows.
 2. Rewrite a script file `xxx.sh`, if necessary. See output of `python ../main.py -h` for details of each parameter.
 3. Execute a command `bash xxx.sh`.
 
-## Optimization Methods
+## Optimization methods
 - [PBIL](https://apps.dtic.mil/docs/citations/ADA282654)
 - [UMDA](http://www.muehlenbein.org/estbin96.pdf)
 - [CGA](https://ieeexplore.ieee.org/document/797971)
@@ -30,7 +30,7 @@ The algorithm of EDA is as follows.
 - [AffEDA](https://ieeexplore.ieee.org/document/6793952)
 - [BOA](https://dl.acm.org/doi/pdf/10.5555/2933923.2933973)
 
-## Objective function
+## Objective functions
 The search space is *D*-dimensional bit-strings **c** &in; {0,1}<sup>D</sup>.
 - OneMax: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\sum_{i=1}^Dc_i" />
 - TwoMin: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c},&space;\boldsymbol{y})=\min(\sum_{i=1}^D|c_i-y_i|,\sum_{i=1}^D|(1-c_i)-y_i|)" />
@@ -43,7 +43,7 @@ The search space is *D*-dimensional bit-strings **c** &in; {0,1}<sup>D</sup>.
   - *z*(**c**) is the number of contiguous zeros ending in Position *D*.
   - if *o*(**c**) > *T* and *z*(**c**) > *T*, then REWARD is *D*, else REWARD is 0.
     - *T* is a user parameter.
-- Deceptive-k Trap: There is a user parameter *k* which determines the number of dependencies of variables.
+- Deceptive-k Trap: There is a user parameter *k* which determines the number of dependencies of each variable.
 
   <img src="https://latex.codecogs.com/gif.latex?f(\boldsymbol{c})&space;=&space;\sum_{i=0}^{D/3-1}g(c_{3i&plus;1},c_{3i&plus;2},c_{3i&plus;3})," />
   <br>
