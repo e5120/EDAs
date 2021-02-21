@@ -2,6 +2,9 @@ from abc import ABCMeta, abstractmethod
 
 
 class ReplacementBase(metaclass=ABCMeta):
+    """
+    Base class of replacement methods.
+    """
     def __init__(self, replace_rate, fix_size=True):
         """
         Parameters
@@ -34,6 +37,13 @@ class ReplacementBase(metaclass=ABCMeta):
             A population used for the replacement.
         c_evals : numpy.ndarray
             The evaluation values corresponding to individuals in candidate.
+
+        Returns
+        -------
+        numpy.ndarray
+            Parent population after the individuals are replaced.
+        numpy.ndarray
+            The evaluation values corresponding to the above population.
         """
         pass
 
