@@ -10,18 +10,21 @@ The algorithm of EDA is as follows.
 5. The solutions in *P* is replaced with those of *O*.
 6. If termination conditions are met, then the algorithm is terminated, else go to (2).
 
-## How to install
-1. `git clone https://github.com/e5120/EDAs.git`
-2. `cd EDAs`
-3. `pip install -r requirements.txt`
-4. `pip install -e .`
+## Setup
+EDAs requires:
+- Python >= 3.6
 
-## Usage
-1. `cd scripts`
-2. Rewrite a script file `xxx.sh`, if necessary. See output of `python ../main.py -h` for details of each parameter.
-3. Execute a command `bash xxx.sh`.
+Install `EDAs` from the sources:
+```
+git clone https://github.com/e5120/EDAs.git
+cd EDAs
+pip install -r requirements.txt
+pip install -e .
+```
 
-## Optimization methods
+(Optional) If you want to use `main.py` or `eda/builder.py`, you need to install [BB-DOB](https://github.com/e5120/BB-DOB) project.
+
+## Features
 - [PBIL](https://apps.dtic.mil/docs/citations/ADA282654)
 - [UMDA](http://www.muehlenbein.org/estbin96.pdf)
 - [CGA](https://ieeexplore.ieee.org/document/797971)
@@ -30,25 +33,7 @@ The algorithm of EDA is as follows.
 - [AffEDA](https://ieeexplore.ieee.org/document/6793952)
 - [BOA](https://dl.acm.org/doi/pdf/10.5555/2933923.2933973)
 
-## Objective functions
-The search space is *D*-dimensional bit-strings **c** &in; {0,1}<sup>D</sup>.
-- OneMax: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\sum_{i=1}^Dc_i" />
-- TwoMin: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c},&space;\boldsymbol{y})=\min(\sum_{i=1}^D|c_i-y_i|,\sum_{i=1}^D|(1-c_i)-y_i|)" />
-  
-  - **y** is *D*-dimensional bit-strings which is generated randomly in advance.
-
-- Four-peaks: <img src="https://latex.codecogs.com/gif.latex?\inline&space;f(\boldsymbol{c})=\max(o(\boldsymbol{c}),z(\boldsymbol{c}))&plus;\textrm{REWARD}" />
-
-  - *o*(**c**) is the number of contiguous ones starting in Position 1.
-  - *z*(**c**) is the number of contiguous zeros ending in Position *D*.
-  - if *o*(**c**) > *T* and *z*(**c**) > *T*, then REWARD is *D*, else REWARD is 0.
-    - *T* is a user parameter.
-- Deceptive-k Trap: There is a user parameter *k* which determines the number of dependencies of each variable.
-
-  <img src="https://latex.codecogs.com/gif.latex?f(\boldsymbol{c})&space;=&space;\sum_{i=0}^{D/3-1}g(c_{3i&plus;1},c_{3i&plus;2},c_{3i&plus;3})," />
-  <br>
-  <img src="https://latex.codecogs.com/gif.latex?g(c_1,&space;c_2,&space;c_3)&space;=&space;\left\{&space;\begin{array}{ll}&space;1-d&space;&&space;\sum_{i}c_i&space;=&space;0&space;\\&space;1-2d&space;&&space;\sum_{i}c_i&space;=&space;1&space;\\&space;0&space;&&space;\sum_{i}c_i&space;=&space;2&space;\\&space;1&space;&&space;\sum_{i}c_i&space;=&space;3,&space;\\&space;\end{array}&space;\right." />
-
-  - where *k* = 3 and *d* is a user parameter
-- [NK-landscape](http://ncra.ucd.ie/wp-content/uploads/2020/08/SocialLearning_GECCO2019.pdf)
-- [W-Model](http://iao.hfuu.edu.cn/images/publications/W2018TWMATBBDOBPIFTBGW.pdf)
+## Usage
+1. `cd scripts`
+2. Rewrite a script file `xxx.sh`, if necessary. See output of `python ../main.py -h` for details of each parameter.
+3. Execute a command `bash xxx.sh`.
