@@ -1,5 +1,6 @@
+from bbdob import *
+
 from eda.logger import Logger
-from eda.objective import *
 from eda.optimizer import *
 from eda.optimizer.selection import *
 from eda.optimizer.replacement import *
