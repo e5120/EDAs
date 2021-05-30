@@ -1,7 +1,8 @@
 def objective_opts(parser):
     parser.add_argument("--objective-type", type=str, required=True,
                         choices=["one_max",  "two_min", "four_peaks",
-                                 "deceptive_trap", "nk_landscape", "w_model"],
+                                 "deceptive_trap", "nk_landscape", "w_model",
+                                 "nas_bench_101"],
                         help="specify a objective function.")
     parser.add_argument("--dim", type=int, required=True,
                         help="dimension of the objective function.")

@@ -43,6 +43,8 @@ def build_objective(args):
                       n=args.n,
                       gamma=args.gamma,
                       minimize=args.minimize)
+    elif args.objective_type == "nas_bench_101":
+        return NasBench101(-1, minimize=args.minimize, filename="nasbench_only108.tfrecord")
     else:
         raise NotImplementedError
 
